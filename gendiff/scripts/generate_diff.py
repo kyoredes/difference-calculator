@@ -3,10 +3,12 @@ import json
 
 def main(file1, file2):
     file1, file2 = return_json(file1), return_json(file2)
-    file1, file2 = dict(sorted(file1.items())), dict(sorted(file2.items()))
     dictionary = merge(file1, file2)
-    res = ''
+    dictionary = dict(sorted(dictionary.items()))
+    res = []
     for element in dictionary:
+        if ele
+            
         
     
         
@@ -22,3 +24,6 @@ def merge(file1, file2):
     res.update(file2)
     return res
 
+
+def flatten(dictionary):
+    return [x for y in dictionary for x in y]
