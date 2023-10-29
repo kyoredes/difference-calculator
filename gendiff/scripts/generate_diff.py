@@ -1,34 +1,55 @@
 import json
+f = {
+  "host": "hexlet.io",
+  "timeout": 50,
+  "proxy": "123.234.53.22",
+  "follow": 'false'
+}
 
+s = {
+  "timeout": 20,
+  "verbose": 'true',
+  "host": "hexlet.io"
+}
 
 def main(file1, file2):
-    file1, file2 = return_json(file1), return_json(file2)
-    # file1 = '-'
-    # file2 = '+'
-    value1, value2 = list(file1.values()), list(file2.values())
-    res = ''
-    dictionary = merge(file1, file2)
-    dictionary = dict(sorted(dictionary.items()))
-    for key in dictionary:
-        # only value1
-        if dictionary[key] in value1 and dictionary[key] not in value2:
-            res += f'   - {key}: {dictionary[key]}\n'
-            continue
-        # only value2
-        if dictionary[key] in value2 and dictionary[key] not in value1:
-            res += f'   + {key}: {dictionary[key]}\n'
-            continue
-        if dictionary[key] in value1 and dictionary[key] in value2:
-            res += f'   {key}: {dictionary[key]}\n'
-            continue
-    return f'{{\n{res}\n}}'
+  lst = []
+  res = ''
+  key1, key2 = list(file1.keys()), list(file2.keys())
+  value1, value2 = list(file1.values()), list(file2.values())
+  value1, value2 = list(map(str, value1)), list(map(str, value2))
+  
+  for dicts in (file1, file2):
+        for k, v in dicts.items():
+          lst.append(f'{k}: {v}')
+  lst = list(set(lst))
+  lst = list(sorted(lst))
+  
+  
+  def sort_lst(string):
+      indx = string.find(' ')
+      if str(string[indx + 1:]) in value1:
+          return False
+      else:
+          return True
 
 
-def return_json(file):
-    return json.load(open(f'gendiff.json-files.{file}'))
-
-
-def merge(file1, file2):
-    res = file1.copy()
-    res.update(file2)
-    return res
+  lst = list(sorted(lst, key=sort_lst))
+  
+  for string in lst:
+      indx = string.find(' ')
+      if str(string[indx + 1:] in value1 and str(string[indx + 1:])) in value2:
+          res += f'    {string}\n'
+          continue
+      if str(string[indx + 1:]) in value1:
+          res += f'  - {string}\n'
+          continue
+      if str(string[indx + 1:]) in value2:
+          res += f'  + {string}\n'
+          continue
+  
+  return f'{{\n{res}}}'
+        
+        
+  
+main(f, s)
