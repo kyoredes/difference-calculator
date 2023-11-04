@@ -30,6 +30,7 @@ def main(file1, file2):
     lst = list(sorted(lst, key=sort_lst))
 
     res = build_string(lst)
+    res = replace_bool(res)
 
     return f'{{\n{res}}}'
 
@@ -64,5 +65,11 @@ def build_string(res_list):
             res += f'  + {string}\n'
             continue
     return res
+
+def replace_bool(string):
+    string = string.replace('True', 'true')
+    string = string.replace('False', 'false')
+    return string
+
 
 # main(f, s) 
