@@ -33,3 +33,5 @@ jobs:
         with:
           coverageCommand: make test-coverage
           debug: true
+      - name: Code Climate Coverage Action
+        uses: paambaati/codeclimate-action@v5.0.0
