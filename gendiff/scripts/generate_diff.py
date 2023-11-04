@@ -66,10 +66,11 @@ def build_string(res_list):
             continue
     return res
 
+
 def replace_bool(string):
     string = string.replace('True', 'true')
     string = string.replace('False', 'false')
     return string
 
 
-# main(f, s) 
+# main(f, s)
