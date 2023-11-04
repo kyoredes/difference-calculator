@@ -1,5 +1,5 @@
 import os
-from gendiff.scripts import generate_diff
+from gendiff import generate_diff
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 path1 = f'{current_dir}/fixtures/file1.json'
