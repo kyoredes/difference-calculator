@@ -9,3 +9,4 @@ correct = open(f'{current_dir}/fixtures/correct.txt').read()
 
 def test_gendiff():
     assert generate_diff(path1, path2) == correct
+
