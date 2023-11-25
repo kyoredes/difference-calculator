@@ -1,4 +1,6 @@
 import json
+import yaml
+import os
 
 # f = {
 #   "host": "hexlet.io",
@@ -15,7 +17,7 @@ import json
 
 
 def main(file1, file2):
-    file1, file2 = json.load(open(file1)), json.load(open(file2))
+    file1, file2 = read_file(file1, file2)
     lst = []
     res = ''
     global value1
@@ -33,6 +35,31 @@ def main(file1, file2):
     res = replace_bool(res)
 
     return f'{{\n{res}}}'
+
+
+def read_file(file1, file2):
+    file1_name = os.path.basename(file1)
+    file2_name = os.path.basename(file2)
+    _, file1_ext = os.path.splitext(file1_name)
+    _, file2_ext = os.path.splitext(file2_name)
+    if file1_ext == file2_ext:
+        if file1_ext == "yaml":
+            res1 = yaml.load(open(file1))
+            res2 = yaml.load(open(file2))
+            return res1, res2
+        else:
+            res1 = json.load(open(file1))
+            res2 = json.load(open(file2))
+            return res1, res2
+    else:
+        if file1_ext == "yaml":
+            res1 = yaml.load(open(file1))
+            res2 = json.load(open(file2))
+            return res1, res2
+        else:
+            res1 = json.load(open(file1))
+            res2 = yaml.load(open(file2))
+            return res1, res2
 
 
 def create_list(file1, file2):
