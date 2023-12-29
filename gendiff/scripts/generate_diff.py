@@ -22,14 +22,15 @@ def main(file1, file2):
     res = ''
     global value1
     global value2
-    value1, value2 = list(file1.values()), list(file2.values())
-    value1, value2 = list(map(str, value1)), list(map(str, value2))
-    lst = create_list(file1, file2)
+    value1, value2 = list(file1.values()), list(file2.values())  # переводим !!!значения!!! (из пары ключ-значения) json-файлов в два списка # noqa: E501
+    value1, value2 = list(map(str, value1)), list(map(str, value2))  # преобразуем все !!!значения!!! списков в строковые # noqa: E501
+    lst = create_list(file1, file2)  # сливаем оба файла в один список строк "ключ: значение" . сейчас они не отсортированы и дубликаты не удалены # noqa: E501
+    # lst = clean_dict(lst)
 
     lst = list(set(lst))
     lst = list(sorted(lst))
 
-    lst = list(sorted(lst, key=sort_lst))
+    lst = list(sorted(lst, key=sort_lst))  # сортируем по дифу (какой файл с каким сравниаем) # noqa: E501
 
     res = build_string(lst)
     res = replace_bool(res)
@@ -62,12 +63,18 @@ def read_file(file1, file2):
             return res1, res2
 
 
-def create_list(file1, file2):
-    temp = []
-    for dicts in (file1, file2):
+def create_list(*files, spaces_count=0, temp=[]):
+    for dicts in files:
         for k, v in dicts.items():
-            temp.append(f'{k}: {v}')
+            temp.append(f'{spaces_count * " "}{k}: {v}')
+            if isinstance(v, dict):
+                spaces_count += 4
+                create_list(v, spaces_count=spaces_count, temp=temp)
     return temp
+
+
+def clean_dict(temp):
+    return list(filter(lambda x: type(x) != dict, temp))
 
 
 def sort_lst(string):
