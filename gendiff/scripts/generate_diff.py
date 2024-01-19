@@ -2,19 +2,6 @@ import json
 import yaml
 import os
 
-# f = {
-#   "host": "hexlet.io",
-#   "timeout": 50,
-#   "proxy": "123.234.53.22",
-#   "follow": 'false'
-# }
-
-# s = {
-#   "timeout": 20,
-#   "verbose": 'true',
-#   "host": "hexlet.io"
-# }
-
 
 def main(file1, file2):
     file1, file2 = read_file(file1, file2)
@@ -63,48 +50,159 @@ def read_file(file1, file2):
             return res1, res2
 
 
-def create_list(*files, spaces_count=0, temp=[]):
-    for dicts in files:
-        for k, v in dicts.items():
-            temp.append(f'{spaces_count * " "}{k}: {v}')
+# f1 = {
+#   "common": {
+#     "setting1": "Value 1",
+#     "setting2": 200,
+#     "setting3": 'true',
+#     "setting6": {
+#       "key": "value",
+#       "doge": {
+#         "wow": ""
+#       }
+#     }
+#   },
+#   "group1": {
+#     "baz": "bas",
+#     "foo": "bar",
+#     "nest": {
+#       "key": "value"
+#     }
+#   },
+#   "group2": {
+#     "abc": 12345,
+#     "deep": {
+#       "id": 45
+#     }
+#   }
+# }
+
+# f2 = {
+#   "common": {
+#     "follow": 'false',
+#     "setting1": "Value 1",
+#     "setting3": 'null',
+#     "setting4": "blah blah",
+#     "setting5": {
+#       "key5": "value5"
+#     },
+#     "setting6": {
+#       "key": "value",
+#       "ops": "vops",
+#       "doge": {
+#         "wow": "so much"
+#       }
+#     }
+#   },
+#   "group1": {
+#     "foo": "bar",
+#     "baz": "bars",
+#     "nest": "str"
+#   },
+#   "group3": {
+#     "deep": {
+#       "id": {
+#         "number": 45
+#       }
+#     },
+#     "fee": 100500
+#   }
+# }
+
+
+def extract_values(dictionary):
+    values = []
+    for value in dictionary.values():
+        if isinstance(value, dict):
+            values.extend(extract_values(value))
+        else:
+            values.append(value)
+    return values
+
+
+global value1
+global value2
+
+value1 = extract_values(f1)
+value2 = extract_values(f2)
+
+
+def merge_dicts_to_list(*files, result=[], indx=None):
+    for d in files:
+        for k, v in d.items():
+            flag = False
             if isinstance(v, dict):
-                spaces_count += 4
-                create_list(v, spaces_count=spaces_count, temp=temp)
-    return temp
+                result.append(k)
+                result.append([])
+                indx = result.index([])
+                merge_dicts_to_list(v, indx=indx)
+            if indx != None:
+                result[indx].append(f'{k}: {v}')
+        return result
 
 
-def clean_dict(temp):
-    return list(filter(lambda x: type(x) != dict, temp))
+lst = unite_dicts(f1, f2)
 
 
-def sort_lst(string):
-    indx = string.find(' ')
-    if str(string[indx + 1:]) in value1:
-        return False
-    else:
-        return True
+def get_key(d, value):
+    for k, v in d.items():
+        if v == value:
+            return k
 
 
-def build_string(res_list):
-    res = ''
-    for string in res_list:
-        indx = string.find(' ')
-        if str(string[indx + 1:] in value1 and str(string[indx + 1:])) in value2:  # noqa: E501
-            res += f'    {string}\n'
-            continue
-        if str(string[indx + 1:]) in value1:
-            res += f'  - {string}\n'
-            continue
-        if str(string[indx + 1:]) in value2:
-            res += f'  + {string}\n'
-            continue
-    return res
+def get_value_nested_level(dictionary, k, target_value, level=0):
+    for value in dictionary.values():
+        if value == target_value and get_key(dictionary, value) == k:
+            return level
+        elif isinstance(value, dict):
+            nested_level = get_value_nested_level(value, k, target_value, level + 1)  # noqa: E501
+            if nested_level is not None:
+                return nested_level
+    return None
 
 
-def replace_bool(string):
-    string = string.replace('True', 'true')
-    string = string.replace('False', 'false')
-    return string
+def get_key_nested_level(dictionary, k, level=0):
+    for key, value in dictionary.items():
+        if key == k:
+            return level
+        elif isinstance(value, dict):
+            nested_level = get_key_nested_level(value, k, level + 1)
+            if nested_level is not None:
+                return nested_level
+    return None
+
+
+# num_value = get_value_nested_level(f1, 'setting2', 200)
+# print(num_value)
+# num_key = get_key_nested_level(f1, 'key')
+# print(num_key)
+
+
+# def build_string(res_list):
+#     res = ''
+#     for string in res_list:
+#         indx = string.find(' ')
+#         if str(string[indx + 1:] in value1 and str(string[indx + 1:])) in value2:  # noqa: E501
+#             res += f'    {string}\n'
+#             continue
+#         if str(string[indx + 1:]) in value1:
+#             res += f'  - {string}\n'
+#             continue
+#         if str(string[indx + 1:]) in value2:
+#             res += f'  + {string}\n'
+#             continue
+#     return res
+
+
+# s = build_string(lst)
+# print(s)
+
+
+
+# def replace_bool(string):
+#     string = string.replace('True', 'true')
+#     string = string.replace('False', 'false')
+#     return string
 
 
 # main(f, s)
