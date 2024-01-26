@@ -127,18 +127,22 @@ value1 = extract_values(f1)
 value2 = extract_values(f2)
 
 
-def merge_dicts_to_list(*files, result=[], indx=None):
+def merge_dicts(*files, res={}):
     for d in files:
         for k, v in d.items():
-            flag = False
             if isinstance(v, dict):
-                result.append(k)
-                result.append([])
-                indx = result.index([])
-                merge_dicts_to_list(v, indx=indx)
-            if indx != None:
-                result[indx].append(f'{k}: {v}')
-        return result
+                res[k] = []
+                merge_dicts(v, res=res)
+            if k not in d.keys():
+                res[k] = []
+                res[k].append(v)
+                continue
+            else:
+                if res.get(k) != None:
+                    res[k].append(v)
+                else:
+                    res[k] = [v]
+    return res
 
 
 lst = unite_dicts(f1, f2)
