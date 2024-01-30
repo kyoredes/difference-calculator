@@ -131,17 +131,12 @@ def merge_dicts(*files, res={}):
     for d in files:
         for k, v in d.items():
             if isinstance(v, dict):
-                res[k] = []
                 merge_dicts(v, res=res)
-            if k not in d.keys():
+            if res.get(k) == None:
+                res[k] = v
+            else:
                 res[k] = []
                 res[k].append(v)
-                continue
-            else:
-                if res.get(k) != None:
-                    res[k].append(v)
-                else:
-                    res[k] = [v]
     return res
 
 
