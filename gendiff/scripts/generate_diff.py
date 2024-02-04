@@ -129,6 +129,7 @@ value2 = extract_values(f2)
 
 def generate_diff(before: dict, after: dict) -> dict:
     all_keys = before.keys() | after.keys()
+    all_keys = sorted(all_keys)
     diff = {}
     for key in all_keys:
 
