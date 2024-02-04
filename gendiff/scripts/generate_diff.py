@@ -127,17 +127,30 @@ value1 = extract_values(f1)
 value2 = extract_values(f2)
 
 
-def merge_dicts(*files, res={}):
-    for d in files:
-        for k, v in d.items():
-            if isinstance(v, dict):
-                merge_dicts(v, res=res)
-            if res.get(k) == None:
-                res[k] = v
+def generate_diff(before: dict, after: dict) -> dict:
+    all_keys = before.keys() | after.keys()
+    diff = {}
+    for key in all_keys:
+
+        if key not in after:
+            # key был удален. 
+            diff[key] = {"type": REMOVED, "value": before[key]}
+
+        if key not in before:
+            # key был добавлен
+            diff[key] = {"type": ADDED, "value": after[key]}
+
+        if key in before and key in after:
+            if isinstance(before[key], dict) and isinstance(after[key], dict):
+                diff[key] = {"type": NESTED, "value": generate_diff(before[key], after[key])}
+                continue 
+
+            if before[key] != after[key]:
+                diff[key] = {"type": CHANGED, "old_value": before[key], "new_value": after[key]}
             else:
-                res[k] = []
-                res[k].append(v)
-    return res
+                diff[key] = {"type": UNCHANGED, "value": before[key]}
+
+    return diff
 
 
 lst = unite_dicts(f1, f2)
