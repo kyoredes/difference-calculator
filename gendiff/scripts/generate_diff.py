@@ -79,13 +79,3 @@ def generate_diff(before: dict, after: dict) -> dict:
             else:
                 diff[key] = {"type": UNCHANGED, "value": before[key]}
     return diff
-
-
-def unpack_values(dict_values):
-    s = ''
-    for k, v in dict_values.items():
-        if isinstance(v, dict):
-            s += f'{k}: {{\n{unpack_values(v)}}}\n'
-        else:
-            s += f'{k}: {v}\n'
-    return s
