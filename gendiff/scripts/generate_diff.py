@@ -2,6 +2,11 @@ import json
 import yaml
 import os
 
+ADDED = "added"
+REMOVED = "removed"
+CHANGED = "changed"
+UNCHANGED = "unchanged"
+NESTED = "nested"
 
 def main(file1, file2):
     file1, file2 = read_file(file1, file2)
@@ -50,83 +55,6 @@ def read_file(file1, file2):
             return res1, res2
 
 
-# f1 = {
-#   "common": {
-#     "setting1": "Value 1",
-#     "setting2": 200,
-#     "setting3": 'true',
-#     "setting6": {
-#       "key": "value",
-#       "doge": {
-#         "wow": ""
-#       }
-#     }
-#   },
-#   "group1": {
-#     "baz": "bas",
-#     "foo": "bar",
-#     "nest": {
-#       "key": "value"
-#     }
-#   },
-#   "group2": {
-#     "abc": 12345,
-#     "deep": {
-#       "id": 45
-#     }
-#   }
-# }
-
-# f2 = {
-#   "common": {
-#     "follow": 'false',
-#     "setting1": "Value 1",
-#     "setting3": 'null',
-#     "setting4": "blah blah",
-#     "setting5": {
-#       "key5": "value5"
-#     },
-#     "setting6": {
-#       "key": "value",
-#       "ops": "vops",
-#       "doge": {
-#         "wow": "so much"
-#       }
-#     }
-#   },
-#   "group1": {
-#     "foo": "bar",
-#     "baz": "bars",
-#     "nest": "str"
-#   },
-#   "group3": {
-#     "deep": {
-#       "id": {
-#         "number": 45
-#       }
-#     },
-#     "fee": 100500
-#   }
-# }
-
-
-def extract_values(dictionary):
-    values = []
-    for value in dictionary.values():
-        if isinstance(value, dict):
-            values.extend(extract_values(value))
-        else:
-            values.append(value)
-    return values
-
-
-global value1
-global value2
-
-value1 = extract_values(f1)
-value2 = extract_values(f2)
-
-
 def generate_diff(before: dict, after: dict) -> dict:
     all_keys = before.keys() | after.keys()
     all_keys = sorted(all_keys)
@@ -134,7 +62,7 @@ def generate_diff(before: dict, after: dict) -> dict:
     for key in all_keys:
 
         if key not in after:
-            # key был удален. 
+            # key был удален.
             diff[key] = {"type": REMOVED, "value": before[key]}
 
         if key not in before:
@@ -143,79 +71,21 @@ def generate_diff(before: dict, after: dict) -> dict:
 
         if key in before and key in after:
             if isinstance(before[key], dict) and isinstance(after[key], dict):
-                diff[key] = {"type": NESTED, "value": generate_diff(before[key], after[key])}
-                continue 
+                diff[key] = {"type": NESTED, "value": generate_diff(before[key], after[key])}  # noqa
+                continue
 
             if before[key] != after[key]:
-                diff[key] = {"type": CHANGED, "old_value": before[key], "new_value": after[key]}
+                diff[key] = {"type": CHANGED, "old_value": before[key], "new_value": after[key]}  # noqa
             else:
                 diff[key] = {"type": UNCHANGED, "value": before[key]}
-
     return diff
 
 
-lst = unite_dicts(f1, f2)
-
-
-def get_key(d, value):
-    for k, v in d.items():
-        if v == value:
-            return k
-
-
-def get_value_nested_level(dictionary, k, target_value, level=0):
-    for value in dictionary.values():
-        if value == target_value and get_key(dictionary, value) == k:
-            return level
-        elif isinstance(value, dict):
-            nested_level = get_value_nested_level(value, k, target_value, level + 1)  # noqa: E501
-            if nested_level is not None:
-                return nested_level
-    return None
-
-
-def get_key_nested_level(dictionary, k, level=0):
-    for key, value in dictionary.items():
-        if key == k:
-            return level
-        elif isinstance(value, dict):
-            nested_level = get_key_nested_level(value, k, level + 1)
-            if nested_level is not None:
-                return nested_level
-    return None
-
-
-# num_value = get_value_nested_level(f1, 'setting2', 200)
-# print(num_value)
-# num_key = get_key_nested_level(f1, 'key')
-# print(num_key)
-
-
-# def build_string(res_list):
-#     res = ''
-#     for string in res_list:
-#         indx = string.find(' ')
-#         if str(string[indx + 1:] in value1 and str(string[indx + 1:])) in value2:  # noqa: E501
-#             res += f'    {string}\n'
-#             continue
-#         if str(string[indx + 1:]) in value1:
-#             res += f'  - {string}\n'
-#             continue
-#         if str(string[indx + 1:]) in value2:
-#             res += f'  + {string}\n'
-#             continue
-#     return res
-
-
-# s = build_string(lst)
-# print(s)
-
-
-
-# def replace_bool(string):
-#     string = string.replace('True', 'true')
-#     string = string.replace('False', 'false')
-#     return string
-
-
-# main(f, s)
+def unpack_values(dict_values):
+    s = ''
+    for k, v in dict_values.items():
+        if isinstance(v, dict):
+            s += f'{k}: {{\n{unpack_values(v)}}}\n'
+        else:
+            s += f'{k}: {v}\n'
+    return s
