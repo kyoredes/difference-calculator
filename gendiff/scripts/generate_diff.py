@@ -1,33 +1,7 @@
 import json
 import yaml
 import os
-
-ADDED = "added"
-REMOVED = "removed"
-CHANGED = "changed"
-UNCHANGED = "unchanged"
-NESTED = "nested"
-
-def main(file1, file2):
-    file1, file2 = read_file(file1, file2)
-    lst = []
-    res = ''
-    global value1
-    global value2
-    value1, value2 = list(file1.values()), list(file2.values())  # переводим !!!значения!!! (из пары ключ-значения) json-файлов в два списка # noqa: E501
-    value1, value2 = list(map(str, value1)), list(map(str, value2))  # преобразуем все !!!значения!!! списков в строковые # noqa: E501
-    lst = create_list(file1, file2)  # сливаем оба файла в один список строк "ключ: значение" . сейчас они не отсортированы и дубликаты не удалены # noqa: E501
-    # lst = clean_dict(lst)
-
-    lst = list(set(lst))
-    lst = list(sorted(lst))
-
-    lst = list(sorted(lst, key=sort_lst))  # сортируем по дифу (какой файл с каким сравниаем) # noqa: E501
-
-    res = build_string(lst)
-    res = replace_bool(res)
-
-    return f'{{\n{res}}}'
+from gendiff.consts import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
 
 
 def read_file(file1, file2):
