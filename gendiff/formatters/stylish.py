@@ -3,9 +3,9 @@ from gendiff.consts import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
 
 
 def change_bool(value):
-	if isinstance(value, bool) or value == None:
-		return str(value).lower()
-	return value
+    if isinstance(value, bool) or value is None:
+        return str(value).lower()
+    return value
 
 
 def unpack_value(d):
@@ -14,11 +14,10 @@ def unpack_value(d):
         if isinstance(v, dict):
             res[k] = unpack_value(v)
         res[f"  {k}"] = change_bool(v)
-        
     return res
 
 
-def build_dict(data):
+def build_dict(data):  # noqa
     res = {}
     for k, v in data.items():
         if v['type'] == NESTED:
@@ -52,4 +51,3 @@ def build_string(res_dict):
     xstr = xstr.replace('"', "")
     xstr = xstr.replace(",", "")
     return xstr
-

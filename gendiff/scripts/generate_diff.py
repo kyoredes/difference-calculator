@@ -29,7 +29,7 @@ def read_file(file1, file2):
             return res1, res2
 
 
-def generate_diff(before: dict, after: dict) -> dict:
+def generate_diff(before: dict, after: dict) -> dict:  # noqa
     all_keys = before.keys() | after.keys()
     all_keys = sorted(all_keys)
     diff = {}

@@ -16,4 +16,3 @@ def test_json_gendiff():
 
 def test_yaml_gendiff():
     assert generate_diff(yaml_path1, yaml_path2) == correct
-
