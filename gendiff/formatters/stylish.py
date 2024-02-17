@@ -1,5 +1,5 @@
-import json
 from gendiff.consts import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
+
 
 def unpack_value(elmnt, level=0):
     res = []
@@ -16,20 +16,20 @@ def build_string(data, level=1):  # noqa
     tabs = ' ' * (4 * level - 4)
     for k, v in data.items():
 
-        if v['type'] == 'nested':
+        if v['type'] == NESTED:
             res.append(f'{tabs}    {k}: {build_string(v["value"],  level+1)}')
 
-        elif v['type'] == 'added':
+        elif v['type'] == ADDED:
             res.append(f'{tabs}  + {k}: {unpack_value(v["value"], level)}')
 
-        elif v['type'] == 'removed':
+        elif v['type'] == REMOVED:
             res.append(f'{tabs}  - {k}: {unpack_value(v["value"], level)}')
 
-        elif v['type'] == 'changed':
+        elif v['type'] == CHANGED:
             res.append(f'{tabs}  - {k}: {unpack_value(v["old_value"], level)}')
             res.append(f'{tabs}  + {k}: {unpack_value(v["new_value"], level)}')
 
-        elif v['type'] == 'unchanged':
+        elif v['type'] == UNCHANGED:
             res.append(f'{tabs}    {k}: {unpack_value(v["value"], level)}')
 
     return '{\n' + '\n'.join(res) + '\n' + tabs + '}'
@@ -41,4 +41,3 @@ def replace_bool(data):
     xstr = xstr.replace('True', 'true')
     xstr = xstr.replace('None', 'null')
     return xstr
-
