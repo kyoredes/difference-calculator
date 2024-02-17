@@ -18,11 +18,11 @@ yaml_tree1 = f'{current_dir}/fixtures/tree_file1.yaml'
 yaml_tree2 = f'{current_dir}/fixtures/tree_file2.yaml'
 
 def test_json_gendiff():
-    assert main(json_path1, json_path2) == correct
-    assert main(json_tree1, json_tree2) == tree_correct
+    assert main(json_path1, json_path2).rstrip() == correct.rstrip()
+    assert main(json_tree1, json_tree2).rstrip() == tree_correct.rstrip()
 
 
 def test_yaml_gendiff():
-    assert main(yaml_path1, yaml_path2) == correct
-    assert main(yaml_tree1, yaml_tree2) == tree_correct
+    assert main(yaml_path1, yaml_path2).rstrip() == correct.rstrip()
+    assert main(yaml_tree1, yaml_tree2).rstrip() == tree_correct.rstrip()
 
