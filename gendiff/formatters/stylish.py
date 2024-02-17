@@ -1,55 +1,44 @@
 import json
 from gendiff.consts import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
 
-
-def change_bool(value):
-	if isinstance(value, bool) or value == None:
-		return str(value).lower()
-	return value
-
-
-def unpack_value(d):
-    res = {}
-    for k, v in d.items():
-        if isinstance(v, dict):
-            res[k] = unpack_value(v)
-        res[f"  {k}"] = change_bool(v)
-        
-    return res
+def unpack_value(elmnt, level=0):
+    res = []
+    tabs = '    ' * level
+    if not isinstance(elmnt, dict):
+        return elmnt
+    for k, v in elmnt.items():
+        res.append(f'{tabs}    {k}: {unpack_value(v, level+1)}')
+    return '{\n' + '\n'.join(res) + '\n' + tabs + '}'
 
 
-def build_dict(data):
-    res = {}
+def build_string(data, level=1):  # noqa
+    res = []
+    tabs = ' ' * (4 * level - 4)
     for k, v in data.items():
-        if v['type'] == NESTED:
-            res[f"{k}"] = build_dict(v['value'])
 
-        elif v['type'] == ADDED:
-            res[f"+ {k}"] = change_bool(v['value'])
+        if v['type'] == 'nested':
+            res.append(f'{tabs}    {k}: {build_string(v["value"],  level+1)}')
 
-        elif v['type'] == REMOVED:
-            res[f"- {k}"] = change_bool(v['value'])
+        elif v['type'] == 'added':
+            res.append(f'{tabs}  + {k}: {unpack_value(v["value"], level)}')
 
-        elif v['type'] == CHANGED:
-            if isinstance(v['old_value'], dict):
-                res[f"- {k}"] = unpack_value(v['old_value'])  # noqa E:501
-            else:
-                res[f"- {k}"] = change_bool(v['old_value'])
-            if isinstance(v['new_value'], dict):
-                res[f"+ {k}"] = unpack_value(v['new_value'])  # noqa E:501
-            else:
-                res[f"+ {k}"] = change_bool(v['new_value'])
+        elif v['type'] == 'removed':
+            res.append(f'{tabs}  - {k}: {unpack_value(v["value"], level)}')
 
-        elif v['type'] == UNCHANGED:
-            res[f"  {k}"] = change_bool(v['value'])
+        elif v['type'] == 'changed':
+            res.append(f'{tabs}  - {k}: {unpack_value(v["old_value"], level)}')
+            res.append(f'{tabs}  + {k}: {unpack_value(v["new_value"], level)}')
 
-    return res
+        elif v['type'] == 'unchanged':
+            res.append(f'{tabs}    {k}: {unpack_value(v["value"], level)}')
+
+    return '{\n' + '\n'.join(res) + '\n' + tabs + '}'
 
 
-def build_string(res_dict):
-    x = res_dict
-    xstr = json.dumps(x, indent=4)
-    xstr = xstr.replace('"', "")
-    xstr = xstr.replace(",", "")
+def replace_bool(data):
+    xstr = data
+    xstr = xstr.replace('False', 'false')
+    xstr = xstr.replace('True', 'true')
+    xstr = xstr.replace('None', 'null')
     return xstr
 
