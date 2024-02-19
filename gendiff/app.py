@@ -17,6 +17,6 @@ def main(file1, file2, format_name='stylish'):
     elif format_name == 'json':
         res_str = build_json(diff)
     else:
-        raise FormatError('Unknown format name')
+        raise NameError('Unknown format name')
     res_str = replace_bool(res_str)
     return res_str
