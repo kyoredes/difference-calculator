@@ -3,9 +3,6 @@ from gendiff.formatters.stylish import build_string, replace_bool  # noqa E:501
 from gendiff.formatters.plain import build_plain  # noqa E:501
 from gendiff.formatters.json_format import build_json  # noqa E:501
 
-class FormatError(Exception):
-    pass
-
 
 def main(file1, file2, format_name='stylish'):
     f1, f2 = read_file(file1, file2)
