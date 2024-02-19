@@ -1,6 +1,8 @@
 def get_value(elmnt):
     if isinstance(elmnt, dict):
         return '[complex value]'
+    if elmnt == True or elmnt == False or elmnt == None:  # noqa E:501
+        return elmnt
     return f'\'{elmnt}\''
 
 

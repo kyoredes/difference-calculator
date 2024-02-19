@@ -9,7 +9,7 @@ class FormatError(Exception):
 
 def main(file1, file2, format_name='stylish'):
     f1, f2 = read_file(file1, file2)
-    diff = main(f1, f2)
+    diff = generate_diff(f1, f2)
     if format_name == 'stylish':
         res_str = build_string(diff)
     elif format_name == 'plain':
