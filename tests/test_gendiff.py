@@ -30,5 +30,4 @@ def test_yaml_gendiff():
 
 
 def test_plain_gendiff():
-    assert generate_diff(json_path1, json_path2).rstrip() == correct_plain.rstrip()  # noqa E:501
-    assert generate_diff(json_tree1, json_tree2).rstrip() == correct_plain.rstrip()  # noqa E:501
+    assert generate_diff(json_tree1, json_tree2, format_name='plain').rstrip() == correct_plain.rstrip()  # noqa E:501
