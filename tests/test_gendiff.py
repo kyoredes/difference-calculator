@@ -8,6 +8,7 @@ json_path2 = f'{current_dir}/fixtures/file2.json'
 correct = open(f'{current_dir}/fixtures/correct.txt').read()
 tree_correct = open(f'{current_dir}/fixtures/correct_tree.txt').read()
 correct_plain = open(f'{current_dir}/fixtures/correct_plain.txt').read()
+correct_json = open(f'{current_dir}/fixtures/correct_json.txt').read()
 
 yaml_path1 = f'{current_dir}/fixtures/file1.yaml'
 yaml_path2 = f'{current_dir}/fixtures/file2.yaml'
@@ -31,3 +32,8 @@ def test_yaml_gendiff():
 
 def test_plain_gendiff():
     assert generate_diff(json_tree1, json_tree2, format_name='plain').rstrip() == correct_plain.rstrip()  # noqa E:501
+
+
+def test_jsn_gendiff():
+    assert generate_diff(json_tree1, json_tree2, format_name='json').rstrip() == correct_json.rstrip()  # noqa E:501
+
