@@ -10,7 +10,7 @@ def read_file(file1, file2):
     _, file1_ext = os.path.splitext(file1_name)
     _, file2_ext = os.path.splitext(file2_name)
     if file1_ext == file2_ext:
-        if file1_ext == "yaml":
+        if file1_ext == "yaml" or file1_ext == "yml":  # noqa E:501
             res1 = yaml.load(open(file1))
             res2 = yaml.load(open(file2))
             return res1, res2
@@ -19,7 +19,7 @@ def read_file(file1, file2):
             res2 = json.load(open(file2))
             return res1, res2
     else:
-        if file1_ext == "yaml":
+        if file1_ext == "yaml" or file1_ext == "yml":  # noqa E:501
             res1 = yaml.load(open(file1))
             res2 = json.load(open(file2))
             return res1, res2
