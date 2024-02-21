@@ -36,4 +36,3 @@ def test_plain_gendiff():
 
 def test_jsn_gendiff():
     assert generate_diff(json_tree1, json_tree2, format_name='json').rstrip() == correct_json.rstrip()  # noqa E:501
-

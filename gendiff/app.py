@@ -5,7 +5,7 @@ from gendiff.formatters.json_format import build_json  # noqa E:501
 
 
 def main(file1, file2, format_name='stylish'):
-    f1, f2 = read_file(file1, file2)
+    f1, f2 = read_file(file1), read_file(file2)
     diff = generate_diff(f1, f2)
     if format_name == 'stylish':
         res_str = build_string(diff)

@@ -4,29 +4,14 @@ import os
 from gendiff.consts import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
 
 
-def read_file(file1, file2):
-    file1_name = os.path.basename(file1)
-    file2_name = os.path.basename(file2)
-    _, file1_ext = os.path.splitext(file1_name)
-    _, file2_ext = os.path.splitext(file2_name)
-    if file1_ext == file2_ext:
-        if file1_ext == "yaml" or file1_ext == "yml":  # noqa E:501
-            res1 = yaml.load(open(file1))
-            res2 = yaml.load(open(file2))
-            return res1, res2
-        else:
-            res1 = json.load(open(file1))
-            res2 = json.load(open(file2))
-            return res1, res2
-    else:
-        if file1_ext == "yaml" or file1_ext == "yml":  # noqa E:501
-            res1 = yaml.load(open(file1))
-            res2 = json.load(open(file2))
-            return res1, res2
-        else:
-            res1 = json.load(open(file1))
-            res2 = yaml.load(open(file2))
-            return res1, res2
+def read_file(file):
+    file_name = os.path.basename(file)
+    _, file_ext = os.path.splitext(file_name)
+    if file_ext == ".json":
+        res = json.load(open(file))
+    elif file_ext == ".yaml" or file_ext == ".yml":  # noqa E:501
+        res = yaml.safe_load(open(file))
+    return res
 
 
 def generate_diff(before: dict, after: dict) -> dict:  # noqa

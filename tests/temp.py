@@ -23,4 +23,3 @@ yaml_tree1 = f'{current_dir}/fixtures/tree_file1.yaml'
 yaml_tree2 = f'{current_dir}/fixtures/tree_file2.yaml'
 
 print(generate_diff(json_tree1, json_tree2, format_name='plain'))
-
