@@ -16,4 +16,4 @@ def main(file1, file2, format_name='stylish'):
     else:
         raise NameError('Unknown format name')
     res_str = replace_bool(res_str)
-    print(res_str)
+    return res_str
