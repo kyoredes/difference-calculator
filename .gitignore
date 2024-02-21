@@ -1,9 +1,6 @@
-__pycache__
+**/__pycache__/
 dist/
 .venv/
 .coverage
 coverage.xml
 .pytest_cache/
-gendiff/__pycache__/
-gendiff/formatters/__pycache__/
-gendiff/tests/__pycache__/
