@@ -1,7 +1,8 @@
-from gendiff.scripts.generate_diff import read_file, generate_diff  # noqa E:501
+from gendiff.generate_diff import generate_diff  # noqa E:501
 from gendiff.formatters.stylish import build_string, replace_bool  # noqa E:501
 from gendiff.formatters.plain import build_plain  # noqa E:501
 from gendiff.formatters.json_format import build_json  # noqa E:501
+from gendiff.parse_file import read_file
 
 
 def main(file1, file2, format_name='stylish'):
