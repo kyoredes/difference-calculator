@@ -10,4 +10,6 @@ def read_file(file):
         res = json.load(open(file))
     elif file_ext == ".yaml" or file_ext == ".yml":  # noqa E:501
         res = yaml.safe_load(open(file))
+    else:
+        raise ValueError("Incorrect extension")
     return res
