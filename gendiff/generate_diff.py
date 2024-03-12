@@ -1,4 +1,20 @@
+import os
 from gendiff.consts import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
+
+
+def read_file(file):
+    return open(file)
+
+
+def get_extension(path):
+    file_name = os.path.basename(path)
+    _, ext = os.path.splitext(file_name)
+    if ext == ".json":
+        return "json"
+    elif ext == ".yaml" or ext == ".yaml":
+        return "yaml"
+    else:
+        raise ValueError("Incorrect Extension")
 
 
 def generate_diff(before: dict, after: dict) -> dict:  # noqa
