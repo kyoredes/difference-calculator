@@ -11,7 +11,7 @@ def get_extension(path):
     _, ext = os.path.splitext(file_name)
     if ext == ".json":
         return "json"
-    elif ext == ".yaml" or ext == ".yaml":
+    elif ext == ".yaml" or ext == ".yml":
         return "yaml"
     else:
         raise ValueError("Incorrect Extension")
