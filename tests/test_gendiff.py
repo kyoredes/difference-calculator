@@ -1,5 +1,5 @@
 import os
-from gendiff import gendiff
+from gendiff import generate_diff
 import pytest
 
 
@@ -32,6 +32,6 @@ def test_gendiff(path1, path2, format_name, expected):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file1 = f'{current_dir}{path1}'
     file2 = f'{current_dir}{path2}'
-    result = gendiff(file1, file2, format_name)
+    result = generate_diff(file1, file2, format_name)
     expected = open(f'{current_dir}{expected}').read()
     assert result.rstrip() == expected.rstrip()
